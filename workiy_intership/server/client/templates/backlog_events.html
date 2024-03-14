@@ -1,0 +1,68 @@
+<!-- backlog_events.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backlog Events</title>
+    <style>
+        /* Stylish and Beautiful Styles for h1 */
+        h2 {
+            text-align: center; /* Center-align the text */
+            font-size: 2em; /* Set font size, adjust as needed */
+            font-weight: bold; /* Make the text bold */
+            color: black; /*
+            ; /* Set text color, change as desired */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a subtle text shadow */
+            margin-bottom: 20px; /* Add bottom margin for spacing */
+        }
+        
+    </style>
+</head>
+<body>
+    <h2>Incompleted Events</h2>
+
+ 
+{% if backlog_events %}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Campaign_Name</th>
+                <th>Incompleted_Task</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in backlog_events %}
+                <tr>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.event_name }}</td>
+                    <td>
+                        {% if not event.week2_backlog and not event.week3_backlog and not event.week4_backlog %}
+                        Not Completed
+                    {% else %}
+                        {% if not event.week2_backlog %}
+                            Week 2 
+                        {% endif %}
+                        {% if not event.week3_backlog %}
+                            {% if event.week2_backlog %}{% endif %}
+                            Week 3 
+                        {% endif %}
+                        {% if not event.week4_backlog %}
+                            {% if event.week2_backlog or event.week3_backlog %} {% endif %}
+                            Week 4 
+                        {% endif %}
+                        {% endif %}
+                        
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No events with backlog.</p>
+{% endif %}
+
+
+</body>
+</html>

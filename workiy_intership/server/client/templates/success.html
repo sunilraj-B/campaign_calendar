@@ -1,0 +1,111 @@
+<!-- in success.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success</title>
+    <style>
+        .backlog-yes {
+            color: green;
+        }
+        h2 {
+            text-align: center; /* Center-align the text */
+            font-size: 2em; /* Set font size, adjust as needed */
+            font-weight: bold; /* Make the text bold */
+            color: #black; /* Set text color, change as desired */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a subtle text shadow */
+            margin-bottom: 20px; /* Add bottom margin for spacing */
+        }
+    </style>
+</head>
+<body>
+    <h2>Campaign-Events Table</h2>
+
+    {% if events %}
+        <form method="post" action="{% url 'update_backlog' %}">
+            {% csrf_token %}
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Campaign_Name</th>
+                        <th>Intiating_Date</th>
+                        <th>Campaign_Followup1</th>
+                        <th>Followup1_Completion</th>
+                        <th>Campaign_Followup2</th>
+                        <th>Followup2_Completion</th>
+                        <th>Closure</th>
+                        <th>Closure_Completion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                        <tr>
+                            <td>{{ event.name }}</td>
+                            <td>{{ event.event_name }}</td>
+                            <td>{{ event.starting_date }}</td>
+                            <td>{{ event.week2_date }}</td>
+                            <td>
+                                {% if event.week2_backlog %}
+                                    <span class="backlog-yes">Yes</span>
+                                {% else %}
+                                    <input type="checkbox" name="week2_backlog_{{ event.id }}" onclick="replaceCheckbox(this)">
+                                {% endif %}
+                            </td>
+                            <td>{{ event.week3_date }}</td>
+                            <td>
+                                {% if event.week3_backlog %}
+                                    <span class="backlog-yes">Yes</span>
+                                {% else %}
+                                    <input type="checkbox" name="week3_backlog_{{ event.id }}" onclick="replaceCheckbox(this)">
+                                {% endif %}
+                            </td>
+                            <td>{{ event.week4_date }}</td>
+                            <td>
+                                {% if event.week4_backlog %}
+                                    <span class="backlog-yes">Yes</span>
+                                {% else %}
+                                    <input type="checkbox" name="week4_backlog_{{ event.id }}" onclick="replaceCheckbox(this)">
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit">Update Table</button>
+          
+        </form>
+<script>
+    function replaceCheckbox(checkbox, eventId) {
+        checkbox.style.display = 'none'; // Hide the checkbox
+        checkbox.parentNode.innerHTML = '<span class="backlog-yes">Yes</span>'; // Replace with "Yes" in red color
+
+        // Send AJAX request to update the database
+        fetch('/update_backlog/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token in headers
+            },
+            body: JSON.stringify({
+                event_id: eventId,
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.error('Failed to update backlog in the server');
+            }
+        })
+        .catch(error => {
+            console.error('Error while updating backlog:', error);
+        });
+    }
+</script>
+
+
+    {% else %}
+        <p>No events available.</p>
+    {% endif %}
+</body>
+</html>

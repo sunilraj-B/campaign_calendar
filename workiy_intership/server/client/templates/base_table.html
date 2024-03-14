@@ -1,0 +1,29 @@
+<!-- basetable.html -->
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Campaign_Name</th>
+            <th>Intiating_Date</th>
+            <!-- Include or exclude backlog columns based on your requirements -->
+            <th>Backlog</th>
+            <th>Campaign_Followup1</th>
+            <th>Campaign_Followup2</th>
+            <th>Closure</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+            <tr>
+                <td>{{ event.name }}</td>
+                <td>{{ event.event_name }}</td>
+                <td>{{ event.starting_date }}</td>
+                <!-- Include or exclude backlog columns based on your requirements -->
+                <td>{{ event.backlog }}</td>
+                <td>{{ event.backlog_week2 }}</td>
+                <td>{{ event.backlog_week3 }}</td>
+                <td>{{ event.backlog_week4 }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
